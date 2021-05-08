@@ -8,6 +8,12 @@ import db
 
 
 def update_entry(entry: dict) -> dict:
+    name = entry["PaxName"].split()
+
+    entry["PassengerLastName"] = name[0] if len(name) >= 1 else ""
+    entry["PassengerFirstName"] = name[1] if len(name) >= 2 else ""
+    entry["PassengerSecondName"] = name[2] if len(name) >= 3 else ""
+
     return entry
 
 

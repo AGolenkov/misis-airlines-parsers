@@ -5,5 +5,5 @@ this is temporary repo, delete ASAP
 ## Requirements
 
 ```bash
-pip install --user pymongo tqdm openpyxl
+pip install --user pymongo tqdm openpyxl transliterate
 ```

@@ -13,7 +13,7 @@ def update_entry(entry: dict) -> dict:
 
 def parse_yaml(filepath: str = None) -> None:
     if not filepath:
-        with open("config.json", "r") as readfile:
+        with open("scripts\config.json", "r") as readfile:
             filepath = json.load(readfile)["data_dir"] + "/" + "SkyTeam-Exchange.json"
 
     with open(filepath, "r") as readfile:

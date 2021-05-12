@@ -3,12 +3,10 @@ from pymongo import MongoClient
 # ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! !
 # ! Fake username and password FOR LOCAL USE ONLY !
 
-login = "john"
-password = "doe"
-address = "127.0.0.1"
+address = "localhost"
 
 client = MongoClient(
-    f"mongodb://{login}:{password}@{address}:27017/?authSource=admin&readPreference=primary&appname=Airlines%20Parser&ssl=false"
+    f"mongodb://{address}:27017/?authSource=admin&readPreference=primary&appname=Airlines%20Parser&ssl=false"
 )
 
 # !                                               !

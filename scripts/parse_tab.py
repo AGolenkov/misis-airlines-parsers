@@ -6,6 +6,13 @@ from tqdm import tqdm
 
 import db
 
+from transliteration import transliterate
+
+import fuzzy
+
+
+soundex = fuzzy.Soundex(4)
+
 
 def update_entry(entry: dict) -> dict:
     name = entry["PaxName"].split()
@@ -13,6 +20,12 @@ def update_entry(entry: dict) -> dict:
     entry["PassengerLastName"] = name[0] if len(name) >= 1 else ""
     entry["PassengerFirstName"] = name[1] if len(name) >= 2 else ""
     entry["PassengerSecondName"] = name[2] if len(name) >= 3 else ""
+    entry['PassengerFirstName_en'] = transliterate(entry['PassengerFirstName']).replace("'",'').upper()
+    entry['PassengerSecondName_en'] = transliterate(entry['PassengerSecondName']).replace("'",'').upper()
+    entry['PassengerLastName_en'] = transliterate(entry['PassengerLastName']).replace("'",'').upper()
+    entry['PassengerFirstName_sx'] = soundex(entry['PassengerFirstName_en'])
+    entry['PassengerSecondName_sx'] = soundex(entry['PassengerSecondName_en'])
+    entry['PassengerLastName_sx'] = soundex(entry['PassengerLastName_en'])
 
     return entry
 
@@ -39,7 +52,7 @@ def parse_line(line: str, lengths: list, use_magic: bool = False) -> list:
 
 def parse_tab(filepath: str = None) -> None:
     if not filepath:
-        with open("config.json", "r") as readfile:
+        with open("scripts/config.json", "r") as readfile:
             filepath = json.load(readfile)["data_dir"] + "/" + "Sirena-export-fixed.tab"
 
     with open(filepath, "r", encoding="utf-8") as f:

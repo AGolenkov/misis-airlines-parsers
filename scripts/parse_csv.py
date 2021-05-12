@@ -6,14 +6,24 @@ from tqdm import tqdm
 
 import db
 
+import fuzzy
+
+
+soundex = fuzzy.Soundex(4)
+dmeta = fuzzy.DMetaphone()
+
 
 def update_entry(entry: dict) -> dict:
+    entry['PassengerBirthDate'] = entry['PassengerBirthDate'][6:10]+'-'+entry['PassengerBirthDate'][0:2]+'-'+entry['PassengerBirthDate'][3:5]
+    entry['PassengerFirstName_sx'] = soundex(entry['PassengerFirstName'])
+    entry['PassengerSecondName_sx'] = soundex(entry['PassengerSecondName'])
+    entry['PassengerLastName_sx'] = soundex(entry['PassengerLastName'])
     return entry
 
 
 def parse_csv(filepath: str = None) -> None:
     if not filepath:
-        with open("config.json", "r") as readfile:
+        with open("scripts\config.json", "r") as readfile:
             filepath = json.load(readfile)["data_dir"] + "/" + "BoardingData.csv"
 
     with open(filepath, "r") as f:

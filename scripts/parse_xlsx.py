@@ -8,6 +8,11 @@ from tqdm import tqdm
 
 import db
 
+import fuzzy
+
+
+soundex = fuzzy.Soundex(4)
+
 
 def update_entry(entry: dict) -> dict:
     name = entry["name"].split()
@@ -15,6 +20,9 @@ def update_entry(entry: dict) -> dict:
     entry["PassengerLastName"] = name[0] if len(name) >= 1 else ""
     entry["PassengerFirstName"] = name[1] if len(name) >= 2 else ""
     entry["PassengerSecondName"] = name[2] if len(name) >= 3 else ""
+    entry['PassengerFirstName_sx'] = soundex(entry['PassengerFirstName'])
+    entry['PassengerSecondName_sx'] = soundex(entry['PassengerSecondName'])
+    entry['PassengerLastName_sx'] = soundex(entry['PassengerLastName'])
 
     return entry
 
@@ -59,7 +67,7 @@ def parse_xlsx_file(filepath: str = None) -> list:
 
 def parse_xlsx(filepath: str = None) -> None:
     if not filepath:
-        with open("config.json", "r") as readfile:
+        with open("scripts\config.json", "r") as readfile:
             filepath = json.load(readfile)["data_dir"] + "/" + "YourBoardingPassDotAero/"
 
     for file in tqdm(os.listdir(filepath)):

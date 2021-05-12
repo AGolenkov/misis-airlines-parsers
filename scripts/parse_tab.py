@@ -3,6 +3,7 @@
 import json
 
 from tqdm import tqdm
+from transliterate import translit
 
 import db
 
@@ -17,6 +18,7 @@ soundex = fuzzy.Soundex(4)
 def update_entry(entry: dict) -> dict:
     name = entry["PaxName"].split()
 
+    # Get name.
     entry["PassengerLastName"] = name[0] if len(name) >= 1 else ""
     entry["PassengerFirstName"] = name[1] if len(name) >= 2 else ""
     entry["PassengerSecondName"] = name[2] if len(name) >= 3 else ""
@@ -26,6 +28,13 @@ def update_entry(entry: dict) -> dict:
     entry['PassengerFirstName_sx'] = soundex(entry['PassengerFirstName_en'])
     entry['PassengerSecondName_sx'] = soundex(entry['PassengerSecondName_en'])
     entry['PassengerLastName_sx'] = soundex(entry['PassengerLastName_en'])
+
+    # Transliterate name.
+    entry["PassengerFirstName_en"] = translit(entry["PassengerFirstName"], "ru", reversed=True).replace("'", "").upper()
+    entry["PassengerSecondName_en"] = (
+        translit(entry["PassengerSecondName"], "ru", reversed=True).replace("'", "").upper()
+    )
+    entry["PassengerLastName_en"] = translit(entry["PassengerLastName"], "ru", reversed=True).replace("'", "").upper()
 
     return entry
 
